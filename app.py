@@ -1,21 +1,18 @@
 import os
 from dotenv import load_dotenv
-
-load_dotenv()
-
-LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_ACCESS_TOKEN")
-DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
-
-
 from flask import Flask, request, jsonify
 import requests
 
+# .envファイルから環境変数を読み込む
+load_dotenv()
+
+# 環境変数からLINEとDiscordの情報を読み込む
+LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_ACCESS_TOKEN")
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+
 app = Flask(__name__)
 
-# 設定（LINEとDiscordの情報をここに入れる）
-LINE_CHANNEL_ACCESS_TOKEN = "MoiY4JNIiTHs1wKEyMm1Q76mZRrJqcG1rT+ObRfjuqc7cNSHV9rahzflU679Ydi7dslbnGa9WZGimvH0OaVx8Wn0uE8/LVDEIoDTDhLZoSWICzPz+5Luh62zsLUycY4TOSXGSF04Viq2mEBhic/yeAdB04t89/1O/w1cDnyilFU="  # LINE Botのアクセストークン
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1339946657646907423/hF1xtimi0sLfvypeq1DqlJRgXV4zXTghc6HMuRMsY12GrijyTO5Vqp5ctWEIl5BoH4EF"  # Discord Webhook URL
-
+# LINEのメッセージをDiscordに送信する関数
 def send_to_discord(message):
     """LINEのメッセージをDiscordに送信"""
     data = {"content": message}
@@ -34,5 +31,12 @@ def webhook():
 
     return jsonify({"status": "ok"})
 
+@app.route("/")
+def home():
+    """ホームページにアクセスされた場合"""
+    return "Hello, Render!"
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # RenderがPORTを指定してくれるので、それを使う
+    port = int(os.environ.get("PORT", 5000))  # PORT環境変数が設定されている場合、それを使用
+    app.run(host="0.0.0.0", port=port)  # すべてのIPアドレスからアクセス可能
