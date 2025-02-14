@@ -16,8 +16,6 @@ app = Flask(__name__)
 def send_to_discord(message):
     """LINEのメッセージをDiscordに送信"""
     data = {"content": message
-               "username": "配信くん",  # 送信者の名前
-        "avatar_url": "https://pkm.fandom.com/ja/wiki/%E3%83%94%E3%82%AB%E3%83%81%E3%83%A5%E3%82%A6"  # 送信者のアイコンURL
         }
     requests.post(DISCORD_WEBHOOK_URL, json=data)
 
